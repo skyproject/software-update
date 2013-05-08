@@ -17,26 +17,27 @@
 
 namespace SUL
 {
-class SOFTWAREUPDATESHARED_EXPORT UpdateDownloader : public QObject
-{
+    class SOFTWAREUPDATESHARED_EXPORT UpdateDownloader : public QObject
+    {
 
-Q_OBJECT
+            Q_OBJECT
 
-public:
-    UpdateDownloader(QUrl updateFilesXmlUrl);
-    void downloadUpdates();
+        public:
+            UpdateDownloader ( QUrl updateFilesXmlUrl );
+            void downloadUpdates();
 
-private slots:
-    void fileDownloaded();
-    void xmlDownloaded(QByteArray xml);
+        private slots:
+            void fileDownloaded();
+            void xmlDownloaded ( QByteArray xml );
 
-signals:
-    void downloadStarted();
-    void updateDownloaded();
+        signals:
+            void downloadFailed();
+            void downloadStarted();
+            void updateDownloaded();
 
-private:
-    std::vector<FileDownloader*> downloads;
-};
+        private:
+            std::vector<FileDownloader *> downloads;
+    };
 }
 
 #endif // SUL_UPDATEDOWNLOADER_H

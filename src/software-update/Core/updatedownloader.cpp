@@ -16,51 +16,55 @@
 
 using namespace SUL;
 
-UpdateDownloader::UpdateDownloader(QUrl updateFilesXmlUrl)
+UpdateDownloader::UpdateDownloader ( QUrl updateFilesXmlUrl )
 {
     FileDownloader *downloader = new FileDownloader();
-    connect(downloader, SIGNAL(downloadCompleted(QByteArray)),
-            this, SLOT(xmlDownloaded(QByteArray)));
-    downloader->startDownload(updateFilesXmlUrl);
+    connect ( downloader, SIGNAL ( downloadCompleted ( QByteArray ) ),
+              this, SLOT ( xmlDownloaded ( QByteArray ) ) );
+    connect ( downloader, SIGNAL ( downloadFailed() ),
+              this, SIGNAL ( downloadFailed() ) );
+    downloader->startDownload ( updateFilesXmlUrl );
 }
 
-void UpdateDownloader::xmlDownloaded(QByteArray xml)
+void UpdateDownloader::xmlDownloaded ( QByteArray xml )
 {
     QDomDocument xmlDocument;
-    xmlDocument.setContent(xml);
+    xmlDocument.setContent ( xml );
     QDomElement root = xmlDocument.firstChildElement();
     QDomElement child = root.firstChildElement();
     std::map<QString, QString> files;
-    while (child.isNull() != true)
+    while ( child.isNull() != true )
     {
-        if (child.tagName() == "file")
+        if ( child.tagName() == "file" )
         {
-            files.insert(std::pair<QString, QString>(child.attribute("url"),
-                                                     (QApplication::applicationDirPath()
-                                                     + child.attribute("destination"))));
+            files.insert ( std::pair<QString, QString> ( child.attribute ( "url" ),
+                           ( QApplication::applicationDirPath()
+                             + child.attribute ( "destination" ) ) ) );
         }
         child = child.nextSiblingElement();
     }
-    for (std::map<QString, QString>::const_iterator it = files.begin();
-         it != files.end(); ++it)
+    for ( std::map<QString, QString>::const_iterator it = files.begin();
+          it != files.end(); ++it )
     {
         FileDownloader *download = new FileDownloader();
-        connect(download, SIGNAL(downloadCompleted(QByteArray)),
-                this, SLOT(fileDownloaded()));
-        download->startDownload(it->first, it->second);
-        this->downloads.push_back(download);
+        connect ( download, SIGNAL ( downloadCompleted ( QByteArray ) ),
+                  this, SLOT ( fileDownloaded() ) );
+        connect ( download, SIGNAL ( downloadFailed() ),
+                  this, SIGNAL ( downloadFailed() ) );
+        download->startDownload ( it->first, it->second );
+        this->downloads.push_back ( download );
     }
     emit downloadStarted();
 }
 
 void UpdateDownloader::fileDownloaded()
 {
-    std::vector<FileDownloader*>::iterator it = std::find(this->downloads.begin(),
-                                                          this->downloads.end(),
-                                                          qobject_cast<FileDownloader*>(sender()));
-    this->downloads.erase(it);
+    std::vector<FileDownloader *>::iterator it = std::find ( this->downloads.begin(),
+            this->downloads.end(),
+            qobject_cast<FileDownloader *> ( sender() ) );
+    this->downloads.erase ( it );
     this->downloads.shrink_to_fit();
-    if (this->downloads.size() == 0)
+    if ( this->downloads.size() == 0 )
     {
         emit updateDownloaded();
     }

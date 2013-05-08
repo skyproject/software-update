@@ -20,28 +20,29 @@
 
 namespace SUL
 {
-class SOFTWAREUPDATESHARED_EXPORT FileDownloader : public QObject
-{
+    class SOFTWAREUPDATESHARED_EXPORT FileDownloader : public QObject
+    {
 
-Q_OBJECT
+            Q_OBJECT
 
-public:
-    FileDownloader();
-    ~FileDownloader();
-    void startDownload(QUrl fileUrl, QString destinationFile = "");
+        public:
+            FileDownloader();
+            ~FileDownloader();
+            void startDownload ( QUrl fileUrl, QString destinationFile = "" );
 
-private slots:
-    void fileDownloaded();
+        private slots:
+            void fileDownloaded();
 
-signals:
-    void downloadCompleted(QByteArray file);
+        signals:
+            void downloadFailed();
+            void downloadCompleted ( QByteArray file );
 
-private:
-    QNetworkAccessManager *network;
-    QByteArray m_DownloadedData;
-    QNetworkReply *reply;
-    QString filePath;
-};
+        private:
+            QNetworkAccessManager *network;
+            QByteArray m_DownloadedData;
+            QNetworkReply *reply;
+            QString filePath;
+    };
 }
 
 #endif // SUL_FILEDOWNLOADER_H

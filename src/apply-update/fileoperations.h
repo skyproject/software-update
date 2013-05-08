@@ -15,10 +15,10 @@
 
 class FileOperations
 {
-public:
-    static void removeFiles(std::vector<QString> files);
-    static void renameFiles(std::map<QString, QString> files);
-    static void copyFiles(std::map<QString, QString> files);
+    public:
+        static void removeFiles ( std::vector<QString> files );
+        static void renameFiles ( std::map<QString, QString> files );
+        static void copyFiles ( std::map<QString, QString> files );
 };
 
 #endif // FILEOPERATIONS_H

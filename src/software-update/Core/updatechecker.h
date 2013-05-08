@@ -16,27 +16,27 @@
 
 namespace SUL
 {
-class SOFTWAREUPDATESHARED_EXPORT UpdateChecker : public QObject
-{
+    class SOFTWAREUPDATESHARED_EXPORT UpdateChecker : public QObject
+    {
 
-Q_OBJECT
+            Q_OBJECT
 
-public:
-    UpdateChecker(Structs::Application app);
-    void checkForUpdates();
+        public:
+            UpdateChecker ( Structs::Application app );
+            void checkForUpdates();
 
-private slots:
-    void xmlDownloaded(QByteArray xml);
+        private slots:
+            void xmlDownloaded ( QByteArray xml );
 
-signals:
-    void updateAvailable(Structs::UpdateInformation info);
-    void updateIsNotAvailable();
+        signals:
+            void updateAvailable ( Structs::UpdateInformation info );
+            void updateIsNotAvailable();
 
-private:
-    bool isUpdateAvailable(QString currentVersion);
-    bool isUpdateRequired(QString requiredVersion);
-    Structs::Application application;
-};
+        private:
+            bool isUpdateAvailable ( QString currentVersion );
+            bool isUpdateRequired ( QString requiredVersion );
+            Structs::Application application;
+    };
 }
 
 #endif // SUL_UPDATESCHECK_H

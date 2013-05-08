@@ -12,28 +12,28 @@
 
 using namespace SUL;
 
-UpdateWindow::UpdateWindow(Structs::Application app,
-                           Structs::UpdateInformation info,
-                           QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::UpdateWindow)
+UpdateWindow::UpdateWindow ( Structs::Application app,
+                             Structs::UpdateInformation info,
+                             QWidget *parent ) :
+    QMainWindow ( parent ),
+    ui ( new Ui::UpdateWindow )
 {
-    ui->setupUi(this);
+    ui->setupUi ( this );
     this->application = app;
-    ui->labelApplicationName->setText(info.applicationName);
-    ui->labelUpdate->setText("A new version (" + info.currentVersion
-                             + ") of " + info.applicationName
-                             + " is available. Do you want to install it?");
-    ui->textReleaseNotes->setHtml(info.releaseNotes);
-    if (info.isUpdateRequired == true)
+    ui->labelApplicationName->setText ( info.applicationName );
+    ui->labelUpdate->setText ( "A new version (" + info.currentVersion
+                               + ") of " + info.applicationName
+                               + " is available. Do you want to install it?" );
+    ui->textReleaseNotes->setHtml ( info.releaseNotes );
+    if ( info.isUpdateRequired == true )
     {
-        ui->buttonSkip->setEnabled(false);
-        ui->buttonSkip->setToolTip("This update is required. You cannot skip it.");
+        ui->buttonSkip->setEnabled ( false );
+        ui->buttonSkip->setToolTip ( "This update is required. You cannot skip it." );
     }
-    connect(ui->buttonInstall, SIGNAL(clicked()),
-                     this, SLOT(download()));
-    connect(ui->buttonSkip, SIGNAL(clicked()),
-                     this, SLOT(skip()));
+    connect ( ui->buttonInstall, SIGNAL ( clicked() ),
+              this, SLOT ( download() ) );
+    connect ( ui->buttonSkip, SIGNAL ( clicked() ),
+              this, SLOT ( skip() ) );
 }
 
 UpdateWindow::~UpdateWindow()
@@ -43,7 +43,7 @@ UpdateWindow::~UpdateWindow()
 
 void UpdateWindow::download()
 {
-    DownloadWindow *dw = new DownloadWindow(this->application);
+    DownloadWindow *dw = new DownloadWindow ( this->application );
     dw->show();
     this->close();
     this->destroy();

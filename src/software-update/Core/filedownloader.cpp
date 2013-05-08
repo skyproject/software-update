@@ -20,28 +20,35 @@ FileDownloader::~FileDownloader()
     delete this->network;
 }
 
-void FileDownloader::startDownload(QUrl fileUrl, QString destinationFile)
+void FileDownloader::startDownload ( QUrl fileUrl, QString destinationFile )
 {
     this->filePath = destinationFile;
-    QNetworkRequest request(fileUrl);
-    this->reply = this->network->get(request);
-    connect(this->reply, SIGNAL(finished()),
-            this, SLOT(fileDownloaded()));
+    QNetworkRequest request ( fileUrl );
+    this->reply = this->network->get ( request );
+    connect ( this->reply, SIGNAL ( finished() ),
+              this, SLOT ( fileDownloaded() ) );
 }
 
 void FileDownloader::fileDownloaded()
 {
-    if (this->filePath != NULL)
+    if ( this->reply->error() != QNetworkReply::NoError )
     {
-        QFile output(this->filePath);
-        output.open(QIODevice::WriteOnly);
-        QByteArray data = this->reply->readAll();
-        output.write(data);
-        output.close();
-        emit downloadCompleted(NULL);
+        emit downloadFailed();
     }
     else
     {
-        emit downloadCompleted(this->reply->readAll());
+        if ( this->filePath != NULL )
+        {
+            QFile output ( this->filePath );
+            output.open ( QIODevice::WriteOnly );
+            QByteArray data = this->reply->readAll();
+            output.write ( data );
+            output.close();
+            emit downloadCompleted ( NULL );
+        }
+        else
+        {
+            emit downloadCompleted ( this->reply->readAll() );
+        }
     }
 }

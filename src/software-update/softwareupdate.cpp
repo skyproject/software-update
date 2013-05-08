@@ -12,28 +12,23 @@
 
 using namespace SUL;
 
-SoftwareUpdate::SoftwareUpdate(Structs::Application app)
+SoftwareUpdate::SoftwareUpdate ( Structs::Application app )
 {
     this->application = app;
-    UpdateChecker *updChecker = new UpdateChecker(app);
-    connect(updChecker, SIGNAL(updateAvailable(Structs::UpdateInformation)),
-                     this, SLOT(updateAvailable(Structs::UpdateInformation)));
-    connect(updChecker, SIGNAL(updateIsNotAvailable()),
-                     this, SLOT(updateCheckFinished()));
+    UpdateChecker *updChecker = new UpdateChecker ( app );
+    connect ( updChecker, SIGNAL ( updateAvailable ( Structs::UpdateInformation ) ),
+              this, SLOT ( updateAvailable ( Structs::UpdateInformation ) ) );
+    connect ( updChecker, SIGNAL ( updateIsNotAvailable() ),
+              this, SIGNAL ( finished() ) );
     updChecker->checkForUpdates();
 }
 
-void SoftwareUpdate::updateAvailable(Structs::UpdateInformation info)
+void SoftwareUpdate::updateAvailable ( Structs::UpdateInformation info )
 {
-    UpdateWindow *uw = new UpdateWindow(this->application, info);
+    UpdateWindow *uw = new UpdateWindow ( this->application, info );
     uw->show();
-    connect(uw, SIGNAL(updateSkipped()),
-            this, SLOT(updateCheckFinished()));
-    UpdateChecker *uc = qobject_cast<UpdateChecker*>(sender());
+    connect ( uw, SIGNAL ( updateSkipped() ),
+              this, SIGNAL ( finished() ) );
+    UpdateChecker *uc = qobject_cast<UpdateChecker *> ( sender() );
     delete uc;
-}
-
-void SoftwareUpdate::updateCheckFinished()
-{
-    emit finished();
 }

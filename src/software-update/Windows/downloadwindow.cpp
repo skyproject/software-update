@@ -7,6 +7,8 @@
  */
 
 #include <QDesktopServices>
+#include <QMessageBox>
+#include <QProcess>
 
 #include "Windows/downloadwindow.h"
 #include "Core/updatedownloader.h"
@@ -14,16 +16,18 @@
 
 using namespace SUL;
 
-DownloadWindow::DownloadWindow(Structs::Application app,
-                               QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::DownloadWindow)
+DownloadWindow::DownloadWindow ( Structs::Application app,
+                                 QWidget *parent ) :
+    QMainWindow ( parent ),
+    ui ( new Ui::DownloadWindow )
 {
-    ui->setupUi(this);
+    ui->setupUi ( this );
     this->application = app;
-    this->downloader = new UpdateDownloader(app.updateFilesXmlUrl);
-    connect(this->downloader, SIGNAL(updateDownloaded()),
-            this, SLOT(downloadingFinished()));
+    this->downloader = new UpdateDownloader ( app.updateFilesXmlUrl );
+    connect ( this->downloader, SIGNAL ( updateDownloaded() ),
+              this, SLOT ( downloadingFinished() ) );
+    connect ( this->downloader, SIGNAL ( downloadFailed() ),
+              this, SLOT ( downloadingFailed() ) );
 }
 
 DownloadWindow::~DownloadWindow()
@@ -31,19 +35,26 @@ DownloadWindow::~DownloadWindow()
     delete ui;
 }
 
+void DownloadWindow::downloadingFailed()
+{
+    QMessageBox::critical ( this, "Error", "Update was not installed" );
+    QApplication::exit ( 0 );
+}
+
 void DownloadWindow::downloadingFinished()
 {
     FileDownloader *downloader = new FileDownloader();
-    connect(downloader, SIGNAL(downloadCompleted(QByteArray)),
-            this, SLOT(updateTasksDownloaded()));
-    downloader->startDownload(this->application.updateTasksXmlUrl,
-                              (QApplication::applicationDirPath()
-                               + "/software-update-tasks.xml"));
+    connect ( downloader, SIGNAL ( downloadCompleted ( QByteArray ) ),
+              this, SLOT ( updateTasksDownloaded() ) );
+    connect ( downloader, SIGNAL ( downloadFailed() ),
+              this, SLOT ( downloadingFailed() ) );
+    downloader->startDownload ( this->application.updateTasksXmlUrl,
+                                ( QApplication::applicationDirPath()
+                                  + "/software-update-tasks.xml" ) );
 }
 
 void DownloadWindow::updateTasksDownloaded()
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(QApplication::applicationDirPath()
-                                                  + "/apply-update.exe"));
-    QCoreApplication::exit(0);
+    QDesktopServices::openUrl ( QUrl::fromLocalFile ( "apply-update.exe" ) );
+    QCoreApplication::exit ( 0 );
 }

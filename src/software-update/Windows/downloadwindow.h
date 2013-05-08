@@ -15,30 +15,32 @@
 #include "Core\updatedownloader.h"
 #include "structs.h"
 
-namespace Ui {
-class DownloadWindow;
+namespace Ui
+{
+    class DownloadWindow;
 }
 
 namespace SUL
 {
-class SOFTWAREUPDATESHARED_EXPORT DownloadWindow : public QMainWindow
-{
-    Q_OBJECT
-    
-public:
-    explicit DownloadWindow(Structs::Application app,
-                            QWidget *parent = 0);
-    ~DownloadWindow();
-    
-private slots:
-    void downloadingFinished();
-    void updateTasksDownloaded();
+    class SOFTWAREUPDATESHARED_EXPORT DownloadWindow : public QMainWindow
+    {
+            Q_OBJECT
 
-private:
-    Ui::DownloadWindow *ui;
-    UpdateDownloader *downloader;
-    Structs::Application application;
-};
+        public:
+            explicit DownloadWindow ( Structs::Application app,
+                                      QWidget *parent = 0 );
+            ~DownloadWindow();
+
+        private slots:
+            void downloadingFailed();
+            void downloadingFinished();
+            void updateTasksDownloaded();
+
+        private:
+            Ui::DownloadWindow *ui;
+            UpdateDownloader *downloader;
+            Structs::Application application;
+    };
 }
 
 #endif // SUL_DOWNLOADWINDOW_H

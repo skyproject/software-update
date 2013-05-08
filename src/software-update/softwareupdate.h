@@ -16,24 +16,23 @@
 
 namespace SUL
 {
-class SOFTWAREUPDATESHARED_EXPORT SoftwareUpdate : public QObject
-{
+    class SOFTWAREUPDATESHARED_EXPORT SoftwareUpdate : public QObject
+    {
 
-Q_OBJECT
+            Q_OBJECT
 
-public:
-    SoftwareUpdate(Structs::Application app);
+        public:
+            SoftwareUpdate ( Structs::Application app );
 
-private slots:
-    void updateAvailable(Structs::UpdateInformation info);
-    void updateCheckFinished();
+        private slots:
+            void updateAvailable ( Structs::UpdateInformation info );
 
-signals:
-    void finished();
+        signals:
+            void finished();
 
-private:
-    Structs::Application application;
-};
+        private:
+            Structs::Application application;
+    };
 }
 
 #endif // SUL_SOFTWAREUPDATE_H

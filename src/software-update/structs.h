@@ -17,24 +17,24 @@
 
 namespace SUL
 {
-class SOFTWAREUPDATESHARED_EXPORT Structs
-{
-public:
-    struct Application
+    class SOFTWAREUPDATESHARED_EXPORT Structs
     {
-        QString installedVersion;
-        QUrl updateFilesXmlUrl;
-        QUrl updateTasksXmlUrl;
-        QUrl updateXmlUrl;
+        public:
+            struct Application
+            {
+                QString installedVersion;
+                QUrl updateFilesXmlUrl;
+                QUrl updateTasksXmlUrl;
+                QUrl updateXmlUrl;
+            };
+            struct UpdateInformation
+            {
+                QString applicationName;
+                QString currentVersion;
+                bool isUpdateRequired;
+                QString releaseNotes;
+            };
     };
-    struct UpdateInformation
-    {
-        QString applicationName;
-        QString currentVersion;
-        bool isUpdateRequired;
-        QString releaseNotes;
-    };
-};
 }
 
 #endif // SUL_STRUCTS_H

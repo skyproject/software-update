@@ -12,54 +12,54 @@
 
 #include "fileoperations.h"
 
-int main(int argc, char *argv[])
+int main ( int argc, char *argv[] )
 {
-    QCoreApplication a(argc, argv);
+    QCoreApplication a ( argc, argv );
 
-    QFile xml(QCoreApplication::applicationDirPath() + "/software-update-tasks.xml");
+    QFile xml ( QCoreApplication::applicationDirPath() + "/software-update-tasks.xml" );
 
-    if (xml.open(QFile::ReadOnly | QFile::Text) == true)
+    if ( xml.open ( QFile::ReadOnly | QFile::Text ) == true )
     {
         QDomDocument xmlDocument;
-        xmlDocument.setContent(&xml);
+        xmlDocument.setContent ( &xml );
         QDomElement root = xmlDocument.firstChildElement();
         QDomElement child = root.firstChildElement();
         std::vector<QString> removeTasks;
         std::map<QString, QString> renameTasks;
         std::map<QString, QString> copyTasks;
-        while (child.isNull() != true)
+        while ( child.isNull() != true )
         {
-            if (child.tagName() == "removeFile")
+            if ( child.tagName() == "removeFile" )
             {
-                removeTasks.push_back(QCoreApplication::applicationDirPath() + child.attribute("source"));
+                removeTasks.push_back ( QCoreApplication::applicationDirPath() + child.attribute ( "source" ) );
             }
-            else if (child.tagName() == "renameFile")
+            else if ( child.tagName() == "renameFile" )
             {
-                renameTasks.insert(std::pair<QString, QString>(QCoreApplication::applicationDirPath()
-                                                               + child.attribute("source"),
-                                                               QCoreApplication::applicationDirPath()
-                                                               + child.attribute("destination")));
+                renameTasks.insert ( std::pair<QString, QString> ( QCoreApplication::applicationDirPath()
+                                     + child.attribute ( "source" ),
+                                     QCoreApplication::applicationDirPath()
+                                     + child.attribute ( "destination" ) ) );
             }
-            else if (child.tagName() == "copyFile")
+            else if ( child.tagName() == "copyFile" )
             {
-                copyTasks.insert(std::pair<QString, QString>(QCoreApplication::applicationDirPath()
-                                                             + child.attribute("source"),
-                                                             QCoreApplication::applicationDirPath()
-                                                             + child.attribute("destination")));
+                copyTasks.insert ( std::pair<QString, QString> ( QCoreApplication::applicationDirPath()
+                                   + child.attribute ( "source" ),
+                                   QCoreApplication::applicationDirPath()
+                                   + child.attribute ( "destination" ) ) );
             }
             child = child.nextSiblingElement();
         }
-        if (copyTasks.size() > 0)
+        if ( copyTasks.size() > 0 )
         {
-            FileOperations::copyFiles(copyTasks);
+            FileOperations::copyFiles ( copyTasks );
         }
-        if (removeTasks.size() > 0)
+        if ( removeTasks.size() > 0 )
         {
-            FileOperations::removeFiles(removeTasks);
+            FileOperations::removeFiles ( removeTasks );
         }
-        if (renameTasks.size() > 0)
+        if ( renameTasks.size() > 0 )
         {
-            FileOperations::renameFiles(renameTasks);
+            FileOperations::renameFiles ( renameTasks );
         }
         xml.remove();
     }

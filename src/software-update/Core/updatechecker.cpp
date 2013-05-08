@@ -13,7 +13,7 @@
 
 using namespace SUL;
 
-UpdateChecker::UpdateChecker(Structs::Application app)
+UpdateChecker::UpdateChecker ( Structs::Application app )
 {
     this->application = app;
 }
@@ -21,46 +21,48 @@ UpdateChecker::UpdateChecker(Structs::Application app)
 void UpdateChecker::checkForUpdates()
 {
     FileDownloader *downloader = new FileDownloader();
-    connect(downloader, SIGNAL(downloadCompleted(QByteArray)),
-            this, SLOT(xmlDownloaded(QByteArray)));
-    downloader->startDownload(application.updateXmlUrl);
+    connect ( downloader, SIGNAL ( downloadCompleted ( QByteArray ) ),
+              this, SLOT ( xmlDownloaded ( QByteArray ) ) );
+    connect ( downloader, SIGNAL ( downloadFailed() ),
+              this, SIGNAL ( updateIsNotAvailable() ) );
+    downloader->startDownload ( application.updateXmlUrl );
 }
 
-void UpdateChecker::xmlDownloaded(QByteArray xml)
+void UpdateChecker::xmlDownloaded ( QByteArray xml )
 {
     QDomDocument xmlDocument;
-    xmlDocument.setContent(xml);
+    xmlDocument.setContent ( xml );
     QString application, currentVersion, requiredVersion, releaseNotes;
     QDomElement root = xmlDocument.firstChildElement();
     QDomElement child = root.firstChildElement();
-    while (child.isNull() != true)
+    while ( child.isNull() != true )
     {
-        if (child.tagName() == "application")
+        if ( child.tagName() == "application" )
         {
             application = child.text();
         }
-        else if (child.tagName() == "currentVersion")
+        else if ( child.tagName() == "currentVersion" )
         {
             currentVersion = child.text();
         }
-        else if (child.tagName() == "minimalRequiredVersion")
+        else if ( child.tagName() == "minimalRequiredVersion" )
         {
             requiredVersion = child.text();
         }
-        else if (child.tagName() == "releaseNotes")
+        else if ( child.tagName() == "releaseNotes" )
         {
             releaseNotes = child.text();
         }
         child = child.nextSiblingElement();
     }
-    if (isUpdateAvailable(currentVersion) == true)
+    if ( isUpdateAvailable ( currentVersion ) == true )
     {
         Structs::UpdateInformation info;
         info.applicationName = application;
         info.currentVersion = currentVersion;
-        info.isUpdateRequired = isUpdateRequired(requiredVersion);
+        info.isUpdateRequired = isUpdateRequired ( requiredVersion );
         info.releaseNotes = releaseNotes;
-        emit updateAvailable(info);
+        emit updateAvailable ( info );
     }
     else
     {
@@ -68,46 +70,46 @@ void UpdateChecker::xmlDownloaded(QByteArray xml)
     }
 }
 
-bool UpdateChecker::isUpdateAvailable(QString currentVersion)
+bool UpdateChecker::isUpdateAvailable ( QString currentVersion )
 {
-    QStringList current = currentVersion.split(".");
-    QStringList installed = this->application.installedVersion.split(".");
-    if (current[0] > installed[0])
+    QStringList current = currentVersion.split ( "." );
+    QStringList installed = this->application.installedVersion.split ( "." );
+    if ( current[0] > installed[0] )
     {
         return true;
     }
-    else if (current[1] > installed[1])
+    else if ( current[1] > installed[1] )
     {
         return true;
     }
-    else if (current[2] > installed[2])
+    else if ( current[2] > installed[2] )
     {
         return true;
     }
-    else if (current[3] > installed[3])
+    else if ( current[3] > installed[3] )
     {
         return true;
     }
     return false;
 }
 
-bool UpdateChecker::isUpdateRequired(QString requiredVersion)
+bool UpdateChecker::isUpdateRequired ( QString requiredVersion )
 {
-    QStringList required = requiredVersion.split(".");
-    QStringList installed = this->application.installedVersion.split(".");
-    if (required[0] > installed[0])
+    QStringList required = requiredVersion.split ( "." );
+    QStringList installed = this->application.installedVersion.split ( "." );
+    if ( required[0] > installed[0] )
     {
         return true;
     }
-    else if (required[1] > installed[1])
+    else if ( required[1] > installed[1] )
     {
         return true;
     }
-    else if (required[2] > installed[2])
+    else if ( required[2] > installed[2] )
     {
         return true;
     }
-    else if (required[3] > installed[3])
+    else if ( required[3] > installed[3] )
     {
         return true;
     }
