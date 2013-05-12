@@ -23,11 +23,14 @@ DownloadWindow::DownloadWindow ( Structs::Application app,
 {
     ui->setupUi ( this );
     this->application = app;
-    this->downloader = new UpdateDownloader ( app.updateFilesXmlUrl );
-    connect ( this->downloader, SIGNAL ( updateDownloaded() ),
-              this, SLOT ( downloadingFinished() ) );
-    connect ( this->downloader, SIGNAL ( downloadFailed() ),
+    FileDownloader *downloader = new FileDownloader();
+    connect ( downloader, SIGNAL ( downloadCompleted ( QByteArray ) ),
+              this, SLOT ( updateTasksDownloaded() ) );
+    connect ( downloader, SIGNAL ( downloadFailed() ),
               this, SLOT ( downloadingFailed() ) );
+    downloader->startDownload ( this->application.updateTasksXmlUrl,
+                                ( QApplication::applicationDirPath()
+                                  + "/software-update-tasks.xml" ) );
 }
 
 DownloadWindow::~DownloadWindow()
@@ -43,18 +46,15 @@ void DownloadWindow::downloadingFailed()
 
 void DownloadWindow::downloadingFinished()
 {
-    FileDownloader *downloader = new FileDownloader();
-    connect ( downloader, SIGNAL ( downloadCompleted ( QByteArray ) ),
-              this, SLOT ( updateTasksDownloaded() ) );
-    connect ( downloader, SIGNAL ( downloadFailed() ),
-              this, SLOT ( downloadingFailed() ) );
-    downloader->startDownload ( this->application.updateTasksXmlUrl,
-                                ( QApplication::applicationDirPath()
-                                  + "/software-update-tasks.xml" ) );
+    QDesktopServices::openUrl ( QUrl::fromLocalFile ( "apply-update.exe" ) );
+    QCoreApplication::exit ( 0 );
 }
 
 void DownloadWindow::updateTasksDownloaded()
 {
-    QDesktopServices::openUrl ( QUrl::fromLocalFile ( "apply-update.exe" ) );
-    QCoreApplication::exit ( 0 );
+    this->downloader = new UpdateDownloader ( this->application.updateFilesXmlUrl );
+    connect ( this->downloader, SIGNAL ( updateDownloaded() ),
+              this, SLOT ( downloadingFinished() ) );
+    connect ( this->downloader, SIGNAL ( downloadFailed() ),
+              this, SLOT ( downloadingFailed() ) );
 }
