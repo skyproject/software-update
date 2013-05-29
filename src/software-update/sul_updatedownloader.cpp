@@ -2,7 +2,7 @@
  * Copyright (C) Mikhail Labushev. All rights reserved.
  *
  * This file is a part of software-update library licensed
- * under the GNU General Public License, version 3.
+ * under the GNU Lesser General Public License, version 3.
  * For full terms see LICENSE file.
  */
 
@@ -11,8 +11,8 @@
 #include <vector>
 #include <QtXml>
 
-#include "Core/updatedownloader.h"
-#include "Core/filedownloader.h"
+#include "sul_updatedownloader.h"
+#include "sul_filedownloader.h"
 
 using namespace SUL;
 

@@ -17,24 +17,24 @@ TEMPLATE = lib
 
 DEFINES += SOFTWAREUPDATE_LIBRARY
 
-SOURCES += softwareupdate.cpp \
-           Core\updatechecker.cpp \
-           Core\filedownloader.cpp \
-           Core\updatedownloader.cpp \
-           Windows\updatewindow.cpp \
-           Windows\downloadwindow.cpp
+SOURCES += sul_softwareupdate.cpp \
+           sul_updatechecker.cpp \
+           sul_filedownloader.cpp \
+           sul_updatedownloader.cpp \
+           sul_updatewindow.cpp \
+           sul_downloadwindow.cpp
 
-HEADERS += softwareupdate.h \
+HEADERS += sul_softwareupdate.h \
            software-update_global.h \
-           Core\updatechecker.h \
-           Core\filedownloader.h \
-           Core\updatedownloader.h \
-           Windows\updatewindow.h \
-           Windows\downloadwindow.h \
-           structs.h
+           sul_updatechecker.h \
+           sul_filedownloader.h \
+           sul_updatedownloader.h \
+           sul_updatewindow.h \
+           sul_downloadwindow.h \
+           sul_structs.h
 
-FORMS += Windows\downloadwindow.ui \
-         Windows\updatewindow.ui
+FORMS += sul_downloadwindow.ui \
+         sul_updatewindow.ui
 
 unix:!symbian {
     maemo5 {

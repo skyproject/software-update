@@ -2,13 +2,13 @@
  * Copyright (C) Mikhail Labushev. All rights reserved.
  *
  * This file is a part of software-update library licensed
- * under the GNU General Public License, version 3.
+ * under the GNU Lesser General Public License, version 3.
  * For full terms see LICENSE file.
  */
 
-#include "Windows/downloadwindow.h"
-#include "Windows/updatewindow.h"
-#include "ui_updatewindow.h"
+#include "ui_sul_updatewindow.h"
+#include "sul_downloadwindow.h"
+#include "sul_updatewindow.h"
 
 using namespace SUL;
 
