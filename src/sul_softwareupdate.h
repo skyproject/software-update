@@ -29,9 +29,6 @@ namespace SUL
 
         signals:
             void finished();
-
-        private:
-            Structs::Application application;
     };
 }
 

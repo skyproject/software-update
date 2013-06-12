@@ -14,7 +14,6 @@ using namespace SUL;
 
 SoftwareUpdate::SoftwareUpdate ( Structs::Application app )
 {
-    this->application = app;
     UpdateChecker *updChecker = new UpdateChecker ( app );
     connect ( updChecker, SIGNAL ( updateAvailable ( Structs::UpdateInformation ) ),
               this, SLOT ( updateAvailable ( Structs::UpdateInformation ) ) );
@@ -25,7 +24,7 @@ SoftwareUpdate::SoftwareUpdate ( Structs::Application app )
 
 void SoftwareUpdate::updateAvailable ( Structs::UpdateInformation info )
 {
-    UpdateWindow *uw = new UpdateWindow ( this->application, info );
+    UpdateWindow *uw = new UpdateWindow ( info );
     uw->show();
     connect ( uw, SIGNAL ( updateSkipped() ),
               this, SIGNAL ( finished() ) );

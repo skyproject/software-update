@@ -23,8 +23,6 @@ namespace SUL
             struct Application
             {
                 QString installedVersion;
-                QUrl updateFilesXmlUrl;
-                QUrl updateTasksXmlUrl;
                 QUrl updateXmlUrl;
             };
             struct UpdateInformation
@@ -32,6 +30,7 @@ namespace SUL
                 QString applicationName;
                 QString currentVersion;
                 bool isUpdateRequired;
+                QUrl updatePackageUrl;
                 QString releaseNotes;
             };
     };

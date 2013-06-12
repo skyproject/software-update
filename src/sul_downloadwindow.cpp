@@ -7,30 +7,30 @@
  */
 
 #include <QDesktopServices>
+#include <QStandardPaths>
 #include <QMessageBox>
-#include <QProcess>
+#include <windows.h>
 
 #include "ui_sul_downloadwindow.h"
-#include "sul_updatedownloader.h"
+#include "sul_filedownloader.h"
 #include "sul_downloadwindow.h"
 
 using namespace SUL;
 
-DownloadWindow::DownloadWindow ( Structs::Application app,
+DownloadWindow::DownloadWindow ( QUrl updatePackage,
                                  QWidget *parent ) :
     QMainWindow ( parent ),
     ui ( new Ui::DownloadWindow )
 {
     ui->setupUi ( this );
-    this->application = app;
     FileDownloader *downloader = new FileDownloader();
     connect ( downloader, SIGNAL ( downloadCompleted ( QByteArray ) ),
-              this, SLOT ( updateTasksDownloaded() ) );
+              this, SLOT ( downloadingFinished() ) );
     connect ( downloader, SIGNAL ( downloadFailed() ),
               this, SLOT ( downloadingFailed() ) );
-    downloader->startDownload ( this->application.updateTasksXmlUrl,
-                                ( QApplication::applicationDirPath()
-                                  + "/software-update-tasks.xml" ) );
+    downloader->startDownload ( updatePackage,
+                                QStandardPaths::writableLocation ( QStandardPaths::DataLocation )
+                                + "/software-update-package.exe" );
 }
 
 DownloadWindow::~DownloadWindow()
@@ -40,21 +40,15 @@ DownloadWindow::~DownloadWindow()
 
 void DownloadWindow::downloadingFailed()
 {
-    QMessageBox::critical ( this, "Error", "Update was not installed" );
+    QMessageBox::critical ( this, "Error", "Update was not downloaded." );
     QApplication::exit ( 0 );
 }
 
 void DownloadWindow::downloadingFinished()
 {
-    QDesktopServices::openUrl ( QUrl::fromLocalFile ( "apply-update.exe" ) );
+    QString exec = QStandardPaths::writableLocation ( QStandardPaths::DataLocation )
+                   + "/software-update-package.exe";
+    ShellExecute ( NULL, L"runas", reinterpret_cast<const WCHAR *> ( exec.utf16() ),
+                   NULL, NULL, SW_SHOWNORMAL );
     QCoreApplication::exit ( 0 );
-}
-
-void DownloadWindow::updateTasksDownloaded()
-{
-    this->downloader = new UpdateDownloader ( this->application.updateFilesXmlUrl );
-    connect ( this->downloader, SIGNAL ( updateDownloaded() ),
-              this, SLOT ( downloadingFinished() ) );
-    connect ( this->downloader, SIGNAL ( downloadFailed() ),
-              this, SLOT ( downloadingFailed() ) );
 }

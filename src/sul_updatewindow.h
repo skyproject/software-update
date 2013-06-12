@@ -26,8 +26,7 @@ namespace SUL
             Q_OBJECT
 
         public:
-            explicit UpdateWindow ( Structs::Application app,
-                                    Structs::UpdateInformation info,
+            explicit UpdateWindow ( Structs::UpdateInformation info,
                                     QWidget *parent = 0 );
             ~UpdateWindow();
 
@@ -40,7 +39,7 @@ namespace SUL
 
         private:
             Ui::UpdateWindow *ui;
-            Structs::Application application;
+            QUrl updatePackageUrl;
     };
 }
 

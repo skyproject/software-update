@@ -20,7 +20,6 @@ DEFINES += SOFTWAREUPDATE_LIBRARY
 SOURCES += sul_softwareupdate.cpp \
            sul_updatechecker.cpp \
            sul_filedownloader.cpp \
-           sul_updatedownloader.cpp \
            sul_updatewindow.cpp \
            sul_downloadwindow.cpp
 
@@ -28,7 +27,6 @@ HEADERS += sul_softwareupdate.h \
            software-update_global.h \
            sul_updatechecker.h \
            sul_filedownloader.h \
-           sul_updatedownloader.h \
            sul_updatewindow.h \
            sul_downloadwindow.h \
            sul_structs.h

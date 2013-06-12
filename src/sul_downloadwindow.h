@@ -12,7 +12,6 @@
 #include <QMainWindow>
 #include <QUrl>
 
-#include "sul_updatedownloader.h"
 #include "sul_structs.h"
 
 namespace Ui
@@ -27,18 +26,15 @@ namespace SUL
             Q_OBJECT
 
         public:
-            explicit DownloadWindow ( Structs::Application app,
-                                      QWidget *parent = 0 );
+            explicit DownloadWindow ( QUrl updatePackage, QWidget *parent = 0 );
             ~DownloadWindow();
 
         private slots:
             void downloadingFailed();
             void downloadingFinished();
-            void updateTasksDownloaded();
 
         private:
             Ui::DownloadWindow *ui;
-            UpdateDownloader *downloader;
             Structs::Application application;
     };
 }

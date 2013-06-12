@@ -32,24 +32,28 @@ void UpdateChecker::xmlDownloaded ( QByteArray xml )
 {
     QDomDocument xmlDocument;
     xmlDocument.setContent ( xml );
-    QString application, currentVersion, requiredVersion, releaseNotes;
+    QString application, currentVersion, requiredVersion, releaseNotes, updatePackage;
     QDomElement root = xmlDocument.firstChildElement();
     QDomElement child = root.firstChildElement();
     while ( child.isNull() != true )
     {
-        if ( child.tagName() == "application" )
+        if ( child.tagName() == "name" )
         {
             application = child.text();
         }
-        else if ( child.tagName() == "currentVersion" )
+        else if ( child.tagName() == "version" )
         {
             currentVersion = child.text();
         }
-        else if ( child.tagName() == "minimalRequiredVersion" )
+        else if ( child.tagName() == "minVersion" )
         {
             requiredVersion = child.text();
         }
-        else if ( child.tagName() == "releaseNotes" )
+        else if ( child.tagName() == "update" )
+        {
+            updatePackage = child.text();
+        }
+        else if ( child.tagName() == "notes" )
         {
             releaseNotes = child.text();
         }
@@ -61,6 +65,7 @@ void UpdateChecker::xmlDownloaded ( QByteArray xml )
         info.applicationName = application;
         info.currentVersion = currentVersion;
         info.isUpdateRequired = isUpdateRequired ( requiredVersion );
+        info.updatePackageUrl = QUrl ( updatePackage );
         info.releaseNotes = releaseNotes;
         emit updateAvailable ( info );
     }

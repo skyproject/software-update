@@ -6,6 +6,10 @@
  * For full terms see LICENSE file.
  */
 
+#include <windows.h>
+#include <QMessageBox>
+#include <io.h>
+
 #include "sul_filedownloader.h"
 
 using namespace SUL;
@@ -43,6 +47,10 @@ void FileDownloader::fileDownloaded()
             output.open ( QIODevice::WriteOnly );
             QByteArray data = this->reply->readAll();
             output.write ( data );
+            output.flush();
+#ifdef Q_OS_WIN32
+            FlushFileBuffers ( ( HANDLE ) _get_osfhandle ( output.handle() ) );
+#endif
             output.close();
             emit downloadCompleted ( NULL );
         }

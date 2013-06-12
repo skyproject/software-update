@@ -12,14 +12,13 @@
 
 using namespace SUL;
 
-UpdateWindow::UpdateWindow ( Structs::Application app,
-                             Structs::UpdateInformation info,
+UpdateWindow::UpdateWindow ( Structs::UpdateInformation info,
                              QWidget *parent ) :
     QMainWindow ( parent ),
     ui ( new Ui::UpdateWindow )
 {
     ui->setupUi ( this );
-    this->application = app;
+    this->updatePackageUrl = info.updatePackageUrl;
     ui->labelApplicationName->setText ( info.applicationName );
     ui->labelUpdate->setText ( "A new version (" + info.currentVersion
                                + ") of " + info.applicationName
@@ -43,7 +42,7 @@ UpdateWindow::~UpdateWindow()
 
 void UpdateWindow::download()
 {
-    DownloadWindow *dw = new DownloadWindow ( this->application );
+    DownloadWindow *dw = new DownloadWindow ( this->updatePackageUrl );
     dw->show();
     this->close();
     this->destroy();
