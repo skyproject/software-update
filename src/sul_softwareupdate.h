@@ -18,14 +18,13 @@ namespace SUL
 {
     class SOFTWAREUPDATESHARED_EXPORT SoftwareUpdate : public QObject
     {
-
             Q_OBJECT
 
         public:
-            SoftwareUpdate ( Structs::Application app );
+            SoftwareUpdate(Structs::Application app);
 
         private slots:
-            void updateAvailable ( Structs::UpdateInformation info );
+            void updateAvailable(Structs::UpdateInformation info);
 
         signals:
             void finished();

@@ -17,20 +17,20 @@
 
 using namespace SUL;
 
-DownloadWindow::DownloadWindow ( QUrl updatePackage,
-                                 QWidget *parent ) :
-    QMainWindow ( parent ),
-    ui ( new Ui::DownloadWindow )
+DownloadWindow::DownloadWindow(QUrl updatePackage,
+                               QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::DownloadWindow)
 {
-    ui->setupUi ( this );
+    ui->setupUi(this);
     FileDownloader *downloader = new FileDownloader();
-    connect ( downloader, SIGNAL ( downloadCompleted ( QByteArray ) ),
-              this, SLOT ( downloadingFinished() ) );
-    connect ( downloader, SIGNAL ( downloadFailed() ),
-              this, SLOT ( downloadingFailed() ) );
-    downloader->startDownload ( updatePackage,
-                                QStandardPaths::writableLocation ( QStandardPaths::DataLocation )
-                                + "/software-update-package.exe" );
+    connect(downloader, SIGNAL(downloadCompleted(QByteArray)),
+            this, SLOT(downloadingFinished()));
+    connect(downloader, SIGNAL(downloadFailed()),
+            this, SLOT(downloadingFailed()));
+    downloader->startDownload(updatePackage,
+                              QStandardPaths::writableLocation(QStandardPaths::DataLocation)
+                              + "/software-update-package.exe");
 }
 
 DownloadWindow::~DownloadWindow()
@@ -40,15 +40,15 @@ DownloadWindow::~DownloadWindow()
 
 void DownloadWindow::downloadingFailed()
 {
-    QMessageBox::critical ( this, "Error", "Update was not downloaded." );
-    QApplication::exit ( 0 );
+    QMessageBox::critical(this, "Error", "Update was not downloaded.");
+    QApplication::exit(0);
 }
 
 void DownloadWindow::downloadingFinished()
 {
-    QString exec = QStandardPaths::writableLocation ( QStandardPaths::DataLocation )
+    QString exec = QStandardPaths::writableLocation(QStandardPaths::DataLocation)
                    + "/software-update-package.exe";
-    ShellExecute ( NULL, L"runas", reinterpret_cast<const WCHAR *> ( exec.utf16() ),
-                   NULL, NULL, SW_SHOWNORMAL );
-    QCoreApplication::exit ( 0 );
+    ShellExecute(NULL, L"runas", reinterpret_cast<const WCHAR *>(exec.utf16()),
+                 NULL, NULL, SW_SHOWNORMAL);
+    QCoreApplication::exit(0);
 }

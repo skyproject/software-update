@@ -24,39 +24,39 @@ FileDownloader::~FileDownloader()
     delete this->network;
 }
 
-void FileDownloader::startDownload ( QUrl fileUrl, QString destinationFile )
+void FileDownloader::startDownload(QUrl fileUrl, QString destinationFile)
 {
     this->filePath = destinationFile;
-    QNetworkRequest request ( fileUrl );
-    this->reply = this->network->get ( request );
-    connect ( this->reply, SIGNAL ( finished() ),
-              this, SLOT ( fileDownloaded() ) );
+    QNetworkRequest request(fileUrl);
+    this->reply = this->network->get(request);
+    connect(this->reply, SIGNAL(finished()),
+            this, SLOT(fileDownloaded()));
 }
 
 void FileDownloader::fileDownloaded()
 {
-    if ( this->reply->error() != QNetworkReply::NoError )
+    if (this->reply->error() != QNetworkReply::NoError)
     {
         emit downloadFailed();
     }
     else
     {
-        if ( this->filePath != NULL )
+        if (this->filePath != NULL)
         {
-            QFile output ( this->filePath );
-            output.open ( QIODevice::WriteOnly );
+            QFile output(this->filePath);
+            output.open(QIODevice::WriteOnly);
             QByteArray data = this->reply->readAll();
-            output.write ( data );
+            output.write(data);
             output.flush();
 #ifdef Q_OS_WIN32
-            FlushFileBuffers ( ( HANDLE ) _get_osfhandle ( output.handle() ) );
+            FlushFileBuffers((HANDLE) _get_osfhandle(output.handle()));
 #endif
             output.close();
-            emit downloadCompleted ( NULL );
+            emit downloadCompleted(NULL);
         }
         else
         {
-            emit downloadCompleted ( this->reply->readAll() );
+            emit downloadCompleted(this->reply->readAll());
         }
     }
 }

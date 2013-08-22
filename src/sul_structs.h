@@ -28,7 +28,7 @@ namespace SUL
             struct UpdateInformation
             {
                 QString applicationName;
-                QString currentVersion;
+                QString availableVersion;
                 bool isUpdateRequired;
                 QUrl updatePackageUrl;
                 QString releaseNotes;

@@ -26,7 +26,7 @@ namespace SUL
             Q_OBJECT
 
         public:
-            explicit DownloadWindow ( QUrl updatePackage, QWidget *parent = 0 );
+            explicit DownloadWindow(QUrl updatePackage, QWidget *parent = 0);
             ~DownloadWindow();
 
         private slots:

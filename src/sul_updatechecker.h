@@ -18,23 +18,22 @@ namespace SUL
 {
     class SOFTWAREUPDATESHARED_EXPORT UpdateChecker : public QObject
     {
-
             Q_OBJECT
 
         public:
-            UpdateChecker ( Structs::Application app );
+            UpdateChecker(Structs::Application app);
             void checkForUpdates();
 
         private slots:
-            void xmlDownloaded ( QByteArray xml );
+            void xmlDownloaded(QByteArray xml);
 
         signals:
-            void updateAvailable ( Structs::UpdateInformation info );
+            void updateAvailable(Structs::UpdateInformation info);
             void updateIsNotAvailable();
 
         private:
-            bool isUpdateAvailable ( QString currentVersion );
-            bool isUpdateRequired ( QString requiredVersion );
+            bool isUpdateAvailable(QString availableVersion);
+            bool isUpdateRequired(QString requiredVersion);
             Structs::Application application;
     };
 }

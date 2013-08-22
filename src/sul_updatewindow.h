@@ -26,8 +26,8 @@ namespace SUL
             Q_OBJECT
 
         public:
-            explicit UpdateWindow ( Structs::UpdateInformation info,
-                                    QWidget *parent = 0 );
+            explicit UpdateWindow(Structs::UpdateInformation info,
+                                  QWidget *parent = 0);
             ~UpdateWindow();
 
         private slots:

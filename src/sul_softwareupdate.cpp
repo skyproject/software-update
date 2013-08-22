@@ -12,22 +12,31 @@
 
 using namespace SUL;
 
-SoftwareUpdate::SoftwareUpdate ( Structs::Application app )
+SoftwareUpdate::SoftwareUpdate(Structs::Application app)
 {
-    UpdateChecker *updChecker = new UpdateChecker ( app );
-    connect ( updChecker, SIGNAL ( updateAvailable ( Structs::UpdateInformation ) ),
-              this, SLOT ( updateAvailable ( Structs::UpdateInformation ) ) );
-    connect ( updChecker, SIGNAL ( updateIsNotAvailable() ),
-              this, SIGNAL ( finished() ) );
-    updChecker->checkForUpdates();
+    UpdateChecker *updChecker = new UpdateChecker(app);
+    connect(updChecker, SIGNAL(updateAvailable(Structs::UpdateInformation)),
+            this, SLOT(updateAvailable(Structs::UpdateInformation)));
+    connect(updChecker, SIGNAL(updateIsNotAvailable()),
+            this, SIGNAL(finished()));
+
+    /* the application should start even if an exception has been thrown during update check */
+    try
+    {
+        updChecker->checkForUpdates();
+    }
+    catch (...)
+    {
+        emit finished();
+    }
 }
 
-void SoftwareUpdate::updateAvailable ( Structs::UpdateInformation info )
+void SoftwareUpdate::updateAvailable(Structs::UpdateInformation info)
 {
-    UpdateWindow *uw = new UpdateWindow ( info );
+    UpdateWindow *uw = new UpdateWindow(info);
     uw->show();
-    connect ( uw, SIGNAL ( updateSkipped() ),
-              this, SIGNAL ( finished() ) );
-    UpdateChecker *uc = qobject_cast<UpdateChecker *> ( sender() );
+    connect(uw, SIGNAL(updateSkipped()),
+            this, SIGNAL(finished()));
+    UpdateChecker *uc = qobject_cast<UpdateChecker *> (sender());
     delete uc;
 }
